@@ -198,3 +198,9 @@ i {
   text-align: center;
   font-size: 0.8em;
 }
+
+.addShelf {
+  margin-bottom: 20px;
+  position: relative;
+  right: -80%;
+}

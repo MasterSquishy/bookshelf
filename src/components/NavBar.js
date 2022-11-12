@@ -11,7 +11,7 @@ const NavBar = ({ appName, pages, onSearchQuery }) => {
         </Link>
         <div className="collapse navbar-collapse" id="navbarSupportedContent">
           <ul className="navbar-nav me-auto mb-2 mb-lg-0">
-            {pages.map((p) => {
+            {pages.map((p) => (
               <li key={p.name} className="nav-item">
                 <Link
                   to={p.path}
@@ -20,8 +20,8 @@ const NavBar = ({ appName, pages, onSearchQuery }) => {
                 >
                   {p.name}
                 </Link>
-              </li>;
-            })}
+              </li>
+            ))}
           </ul>
           <SearchBar
             placeholder="Search My Library"

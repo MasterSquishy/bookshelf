@@ -8,7 +8,23 @@ import AddShelfModal from "./AddShelfModal";
 
 function App() {
   const [allBooks, setAllBooks] = useState([]);
-  const [shelves, setShelves] = useState([]);
+  const [shelves, setShelves] = useState([
+    {
+      name: "Currently Reading",
+      id: "currentlyReading",
+      collection: [],
+    },
+    {
+      name: "Want to Read",
+      id: "wantToRead",
+      collection: [],
+    },
+    {
+      name: "Read",
+      id: "read",
+      collection: [],
+    },
+  ]);
 
   const navPages = [
     { name: "Home", path: "/" },
@@ -24,26 +40,15 @@ function App() {
       });
       setAllBooks(booksArray);
     };
-    getAllBooks();
-    // console.log("All Books", allBooks);
 
-    setShelves([
-      {
-        name: "Currently Reading",
-        id: "currentlyReading",
-        collection: allBooks.filter((b) => b.shelf === "currentlyReading"),
-      },
-      {
-        name: "Want to Read",
-        id: "wantToRead",
-        collection: allBooks.filter((b) => b.shelf === "wantToRead"),
-      },
-      {
-        name: "Read",
-        id: "read",
-        collection: allBooks.filter((b) => b.shelf === "read"),
-      },
-    ]);
+    getAllBooks();
+
+    setShelves((s) =>
+      s.map((shelf) => ({
+        ...shelf,
+        collection: allBooks.filter((b) => b.shelf === shelf.id),
+      }))
+    );
   }, [allBooks]);
 
   const handleSearchQuery = (event) => {
@@ -64,8 +69,6 @@ function App() {
       collection: [],
     };
     setShelves([...shelves, newShelfObject]);
-
-    console.log("Shelves: ", shelves);
   };
 
   return (
@@ -78,6 +81,7 @@ function App() {
       <AddShelfModal onAddShelf={handleAddShelf} />
       {shelves.map((shelf) => (
         <BookCollection
+          key={shelf.id}
           name={shelf.name}
           bookList={shelf.collection}
           shelves={shelves}
