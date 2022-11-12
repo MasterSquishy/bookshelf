@@ -1,6 +1,11 @@
 import React from "react";
+import DropUp from "./DropUp";
 
-const BookCollection = ({ name, bookList }) => {
+const BookCollection = ({ name, bookList, shelves, onShelfChange }) => {
+  /*shelves.map((s) => {
+    s.name === name ? (s.selected = true) : (s.selected = false);
+  });*/
+
   return (
     <div className="bookshelf">
       <div className="bookshelf-title">{name}</div>
@@ -14,13 +19,12 @@ const BookCollection = ({ name, bookList }) => {
                   backgroundImage: `url(${b.imageLinks.smallThumbnail})`,
                 }}
               ></div>
-              <span class="fa-stack small fa-2x book-shelf-changer">
-                <i class="fa fa-circle fa-stack-2x"></i>
-                <i
-                  class="fa fa-chevron-down fa-stack-1x fa-inverse"
-                  aria-hidden="true"
-                ></i>
-              </span>
+              <DropUp
+                header="Move to..."
+                options={shelves}
+                onSelect={onShelfChange}
+                bookId={b.id}
+              />
             </div>
             <p className="book-title">{b.title}</p>
             {b.authors.map((author, i) => (
