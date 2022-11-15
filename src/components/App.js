@@ -32,23 +32,39 @@ function App() {
   ];
 
   useEffect(() => {
-    // Get All Books
+    // Get All Books from the api
     const getAllBooks = async () => {
       const res = await BooksAPI.getAll();
       const booksArray = Object.keys(res).map((key) => {
         return res[key];
       });
+
       setAllBooks(booksArray);
     };
 
     getAllBooks();
+  }, []);
 
-    setShelves((s) =>
-      s.map((shelf) => ({
-        ...shelf,
-        collection: allBooks.filter((b) => b.shelf === shelf.id),
-      }))
-    );
+  useEffect(() => {
+    let tempShelves = new Set();
+    // Ensure that these are the first 3 shelves in the list
+    tempShelves.add("currentlyReading");
+    tempShelves.add("wantToRead");
+    tempShelves.add("read");
+
+    // Extract unique shelves from booklist
+    allBooks.forEach((b) => {
+      tempShelves.add(b.shelf);
+    });
+
+    // Add an id and collection of books to each shelf
+    tempShelves = Array.from(tempShelves).map((s) => ({
+      name: _.startCase(s),
+      id: s,
+      collection: allBooks.filter((b) => b.shelf === s),
+    }));
+
+    setShelves(tempShelves);
   }, [allBooks]);
 
   const handleSearchQuery = (event) => {
@@ -56,10 +72,20 @@ function App() {
     console.log(event.target.value);
   };
 
-  const handleShelfChange = (event) => {
-    event.preventDefault();
-    console.log("handleShelfChange - event: ", event.target.value);
-    console.log("handleShelfChange - bookId: ", event.target.bookId);
+  const handleShelfChange = (bookId, newShelf) => {
+    console.log("handleShelfChange - bookId: ", bookId);
+    console.log("handleShelfChange - newShelf: ", newShelf);
+    console.log(allBooks);
+    let target = allBooks.find((book) => book.id === bookId);
+    console.log("handleShelfChange - target: ", target);
+    target.shelf = newShelf;
+
+    console.log("Updated target:", target);
+
+    setAllBooks(
+      allBooks.map((b) => (b.id === bookId ? { ...b, shelf: newShelf } : b))
+    );
+    console.log(allBooks);
   };
 
   const handleAddShelf = (name) => {

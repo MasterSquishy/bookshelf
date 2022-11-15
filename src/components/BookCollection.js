@@ -2,10 +2,6 @@ import React from "react";
 import DropUp from "./DropUp";
 
 const BookCollection = ({ name, bookList, shelves, onShelfChange }) => {
-  /*shelves.map((s) => {
-    s.name === name ? (s.selected = true) : (s.selected = false);
-  });*/
-
   return (
     <div className="bookshelf">
       <div className="bookshelf-title">{name}</div>
@@ -24,6 +20,7 @@ const BookCollection = ({ name, bookList, shelves, onShelfChange }) => {
                 options={shelves}
                 onSelect={onShelfChange}
                 bookId={b.id}
+                currentShelf={name}
               />
             </div>
             <p className="book-title">{b.title}</p>
