@@ -46,7 +46,7 @@ const AddShelfModal = ({ onAddShelf }) => {
           <Button variant="secondary" onClick={handleClose}>
             Cancel
           </Button>
-          <Button variant="primary" onClick={handleAdd}>
+          <Button variant="primary" onClick={(e) => handleAdd(e)}>
             Add
           </Button>
         </Modal.Footer>

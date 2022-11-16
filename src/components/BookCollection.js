@@ -1,7 +1,13 @@
 import React from "react";
 import DropUp from "./DropUp";
+import * as BooksAPI from "../utils/BooksAPI";
 
 const BookCollection = ({ name, bookList, shelves, onShelfChange }) => {
+  const getBookData = async (bookId) => {
+    const res = await BooksAPI.get();
+    const book = res;
+    return book.shelf;
+  };
   return (
     <div className="bookshelf">
       <div className="bookshelf-title">{name}</div>
@@ -12,7 +18,7 @@ const BookCollection = ({ name, bookList, shelves, onShelfChange }) => {
               <div
                 className="book-cover"
                 style={{
-                  backgroundImage: `url(${b.imageLinks.smallThumbnail})`,
+                  backgroundImage: `url(${b.imageLinks.thumbnail})`,
                 }}
               ></div>
               <DropUp
@@ -20,7 +26,7 @@ const BookCollection = ({ name, bookList, shelves, onShelfChange }) => {
                 options={shelves}
                 onSelect={onShelfChange}
                 bookId={b.id}
-                currentShelf={name}
+                currentShelf={getBookData(b.id)}
               />
             </div>
             <p className="book-title">{b.title}</p>

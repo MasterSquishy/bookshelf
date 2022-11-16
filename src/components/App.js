@@ -1,13 +1,15 @@
-import { useState, useEffect } from "react";
-import NavBar from "./NavBar";
-import * as BooksAPI from "../utils/BooksAPI";
-import "../css/App.css";
-import BookCollection from "./BookCollection";
+import { useEffect, useState } from "react";
+import { Route, Routes } from "react-router-dom";
 import _ from "lodash";
-import AddShelfModal from "./AddShelfModal";
+import "../css/App.css";
+import MyBooks from "./MyBooks";
+import Search from "./Search";
+import * as BooksAPI from "../utils/BooksAPI";
 
-function App() {
-  const [allBooks, setAllBooks] = useState([]);
+function App({ query }) {
+  const [myBooks, setMyBooks] = useState([]); // Books that belong to one of my collections
+  const [searchBooks, setSearchBooks] = useState([]); //books returned from API search query
+
   const [shelves, setShelves] = useState([
     {
       name: "Currently Reading",
@@ -26,23 +28,18 @@ function App() {
     },
   ]);
 
-  const navPages = [
-    { name: "Home", path: "/" },
-    { name: "Search", path: "/search" },
-  ];
-
   useEffect(() => {
     // Get All Books from the api
-    const getAllBooks = async () => {
+    const getMyBooks = async () => {
       const res = await BooksAPI.getAll();
       const booksArray = Object.keys(res).map((key) => {
         return res[key];
       });
 
-      setAllBooks(booksArray);
+      setMyBooks(booksArray);
     };
 
-    getAllBooks();
+    getMyBooks();
   }, []);
 
   useEffect(() => {
@@ -53,7 +50,7 @@ function App() {
     tempShelves.add("read");
 
     // Extract unique shelves from booklist
-    allBooks.forEach((b) => {
+    myBooks.forEach((b) => {
       tempShelves.add(b.shelf);
     });
 
@@ -61,31 +58,23 @@ function App() {
     tempShelves = Array.from(tempShelves).map((s) => ({
       name: _.startCase(s),
       id: s,
-      collection: allBooks.filter((b) => b.shelf === s),
+      collection: myBooks.filter((b) =>
+        b.shelf === "" ? b.shelf === "none" : b.shelf === s
+      ),
     }));
 
     setShelves(tempShelves);
-  }, [allBooks]);
-
-  const handleSearchQuery = (event) => {
-    event.preventDefault();
-    console.log(event.target.value);
-  };
+  }, [myBooks]);
 
   const handleShelfChange = (bookId, newShelf) => {
-    console.log("handleShelfChange - bookId: ", bookId);
-    console.log("handleShelfChange - newShelf: ", newShelf);
-    console.log(allBooks);
-    let target = allBooks.find((book) => book.id === bookId);
-    console.log("handleShelfChange - target: ", target);
+    let target = myBooks.find((book) => book.id === bookId);
+
     target.shelf = newShelf;
 
-    console.log("Updated target:", target);
-
-    setAllBooks(
-      allBooks.map((b) => (b.id === bookId ? { ...b, shelf: newShelf } : b))
+    // update booklist with new shelf for target book
+    setMyBooks(
+      myBooks.map((b) => (b.id === bookId ? { ...b, shelf: newShelf } : b))
     );
-    console.log(allBooks);
   };
 
   const handleAddShelf = (name) => {
@@ -96,25 +85,30 @@ function App() {
     };
     setShelves([...shelves, newShelfObject]);
   };
-
   return (
-    <div className="App">
-      <NavBar
-        appName="Bookshelf"
-        pages={navPages}
-        onSearchQuery={handleSearchQuery}
+    <Routes>
+      <Route
+        exact
+        path="/"
+        element={
+          <MyBooks
+            shelves={shelves}
+            onAddShelf={handleAddShelf}
+            onShelfChange={handleShelfChange}
+          />
+        }
       />
-      <AddShelfModal onAddShelf={handleAddShelf} />
-      {shelves.map((shelf) => (
-        <BookCollection
-          key={shelf.id}
-          name={shelf.name}
-          bookList={shelf.collection}
-          shelves={shelves}
-          onShelfChange={handleShelfChange}
-        />
-      ))}
-    </div>
+      <Route
+        path="/search"
+        element={
+          <Search
+            shelves={shelves}
+            onShelfChange={handleShelfChange}
+            query={query}
+          />
+        }
+      />
+    </Routes>
   );
 }
 

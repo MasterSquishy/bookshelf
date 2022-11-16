@@ -16,6 +16,12 @@ body,
   margin-bottom: 20px;
 }
 
+.searchBar {
+  position: fixed;
+  right: 0;
+  padding-right: 10px;
+}
+
 /*fontawesome icon stacks*/
 .fa-stack.small {
   font-size: 1em;
@@ -189,9 +195,11 @@ i {
 
 .book-cover {
   box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+
+  background: #fff;
+
+  width: 127px;
   height: 200px;
-  width: 125px;
-  background: #eee;
 }
 .book-cover-title {
   padding: 20px 10px 0;
