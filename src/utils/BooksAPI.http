@@ -1,0 +1,39 @@
+@headers = {Content-Type: application/json, Accept: application/json, Authorization: chanelle}
+@books-api = https://reactnd-books-api.udacity.com
+
+### - GET All
+GET {{books-api}}/books HTTP/1.1
+Content-Type: application/json
+Accept: application/json
+Authorization: chanelle
+
+### GET Book
+@bookId = nggnmAEACAAJ
+GET {{books-api}}/books/{{bookId}}
+Content-Type: application/json
+Accept: application/json
+Authorization: chanelle
+
+### Update Book
+@shelf = "currentlyReading"
+PUT {{books-api}}/books/{{bookId}}
+Content-Type: application/json
+Accept: application/json
+Authorization: chanelle
+
+{
+    "shelf": {{shelf}}
+}
+
+### Search
+@query = "react"
+@maxResults = 20
+POST {{books-api}}/search
+Content-Type: application/json
+Accept: application/json
+Authorization: chanelle
+
+{
+"query":{{query}},
+"maxResult": {{maxResults}}
+}
