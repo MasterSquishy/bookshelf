@@ -3,25 +3,29 @@ import * as BooksAPI from "../utils/BooksAPI";
 import BookCollection from "./BookCollection";
 
 const Search = ({ shelves, onShelfChange, query }) => {
-  const [allBooks, setAllBooks] = useState([]);
+  const [searchResults, setSearchResults] = useState([]);
 
   useEffect(() => {
-    // Get All Books from the api
-    const getAllBooks = async () => {
+    // Get All Books that match the query from the api
+    const getSearchResults = async () => {
       const res = await BooksAPI.search(query, 20);
-
-      setAllBooks(res);
+      //convert response object to array
+      const booksArray = Object.keys(res).map((key) => {
+        return res[key];
+      });
+      booksArray[0] === "empty query"
+        ? setSearchResults([])
+        : setSearchResults(booksArray);
     };
 
-    getAllBooks();
-  }, []);
+    if (query) getSearchResults();
+  }, [query]);
 
-  console.log("Search Results:", allBooks);
   return (
     <div>
       <BookCollection
         Name="Library Results"
-        bookList={allBooks}
+        bookList={searchResults}
         shelves={shelves}
         onShelfChange={onShelfChange}
       />
