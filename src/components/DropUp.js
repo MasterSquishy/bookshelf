@@ -1,7 +1,9 @@
 import React from "react";
 import PropTypes from "prop-types";
+import _ from "lodash";
 
 const DropUp = ({ header, options, onSelect, bookId, currentShelf }) => {
+  options = [...options, "none"];
   return (
     <div className="btn-group dropup">
       <button
@@ -21,14 +23,14 @@ const DropUp = ({ header, options, onSelect, bookId, currentShelf }) => {
         <h6 className="dropdown-header">{header}</h6>
         {options.map((o) => (
           <button
-            key={o.id}
+            key={o}
             className="dropdown-item"
-            onClick={() => onSelect(bookId, o.id)}
+            onClick={() => onSelect(bookId, o)}
           >
-            {o.name === currentShelf && (
+            {o === currentShelf && (
               <i className="fa fa-check" aria-hidden="true"></i>
             )}
-            {o.name}
+            {_.startCase(o)}
           </button>
         ))}
       </div>
@@ -41,7 +43,7 @@ DropUp.propTypes = {
   options: PropTypes.array.isRequired,
   onSelect: PropTypes.func.isRequired,
   bookId: PropTypes.string.isRequired,
-  currentShelf: PropTypes.string.isRequired,
+  currentShelf: PropTypes.string,
 };
 
 export default DropUp;
