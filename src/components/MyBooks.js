@@ -1,18 +1,24 @@
-import AddShelfModal from "./AddShelfModal";
 import BookCollection from "./BookCollection";
 import PropTypes from "prop-types";
+import _ from "lodash";
 
-const MyBooks = ({ shelves, onAddShelf, onShelfChange }) => {
-  console.log("MyBookShelves: ", shelves);
+const MyBooks = ({ shelves, onShelfChange, myBooks }) => {
+  //console.log("MyBookShelves: ", shelves);
+
+  //console.log("shelves", Object.keys(shelves));
+  //console.log("Values", Object.values(shelves));
+  //console.log("Entries", Object.entries(shelves));
+
+  const bookshelves = Object.entries(shelves);
+
   return (
     <>
-      <AddShelfModal onAddShelf={() => onAddShelf()} />
-      {shelves.map((shelf) => (
+      {bookshelves.map((s) => (
         <BookCollection
-          key={shelf.id}
-          name={shelf.name}
-          bookList={shelf.collection}
-          shelves={shelves}
+          key={s[0]}
+          name={_.startCase(s[0])}
+          bookList={myBooks.filter((b) => b.shelf === s[0])}
+          shelves={Object.keys(shelves)}
           onShelfChange={onShelfChange}
         />
       ))}
@@ -21,8 +27,8 @@ const MyBooks = ({ shelves, onAddShelf, onShelfChange }) => {
 };
 
 MyBooks.propTypes = {
-  shelves: PropTypes.array.isRequired,
-  onAddShelf: PropTypes.func.isRequired,
+  shelves: PropTypes.object.isRequired,
+  myBooks: PropTypes.array.isRequired,
   onShelfChange: PropTypes.func.isRequired,
 };
 export default MyBooks;
