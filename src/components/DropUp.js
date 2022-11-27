@@ -3,7 +3,8 @@ import PropTypes from "prop-types";
 import _ from "lodash";
 
 const DropUp = ({ header, options, onSelect, bookId, currentShelf }) => {
-  options = [...options, "none"];
+  options = [...options, {"none":""}];
+  console.log("Options:", options);
   return (
     <div className="btn-group dropup">
       <button
@@ -23,14 +24,14 @@ const DropUp = ({ header, options, onSelect, bookId, currentShelf }) => {
         <h6 className="dropdown-header">{header}</h6>
         {options.map((o) => (
           <button
-            key={o}
+            key={Object.keys(o)[0]}
             className="dropdown-item"
-            onClick={() => onSelect(bookId, o)}
+            onClick={() => onSelect(bookId, Object.keys(o)[0])}
           >
-            {o === currentShelf && (
+            {Object.keys(o)[0] === currentShelf && (
               <i className="fa fa-check" aria-hidden="true"></i>
             )}
-            {_.startCase(o)}
+            {_.startCase(Object.keys(o)[0])}
           </button>
         ))}
       </div>

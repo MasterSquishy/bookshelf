@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { Route, Routes } from "react-router-dom";
-import _ from "lodash";
 import "../css/App.css";
 import MyBooks from "./MyBooks";
 import Search from "./Search";
@@ -9,7 +8,6 @@ import * as BooksAPI from "../utils/BooksAPI";
 
 function App() {
   const [myBooks, setMyBooks] = useState([]); // Books that belong to one of my collections
-  const [searchBooks, setSearchBooks] = useState([]); //books returned from API search query
   const [query, setQuery] = useState("");
   const navPages = [
     { name: "Home", path: "/", search: false },
@@ -22,16 +20,17 @@ function App() {
     },
   ];
 
-  const [shelves, setShelves] = useState({
-    currentlyReading: ["1"],
-    wantToRead: ["1"],
-    read: ["1"],
-  });
+  const [shelves, setShelves] = useState([
+    {currentlyReading: ["1"]},
+    {wantToRead: ["1"]},
+    {read: ["1"]},
+  ]);
 
   const updateBook = async (book) => {
     const res = await BooksAPI.update(book, book.shelf);
 
     console.log("The Problem", res);
+    console.log("The solution:", Object.entries(res));
     return res;
   };
 
@@ -52,7 +51,9 @@ function App() {
   const handleShelfChange = (bookId, newShelf) => {
     let target = myBooks.find((book) => book.id === bookId);
 
-    target.shelf = newShelf;
+   target.shelf = newShelf;
+    //target = {...target, shelf: newShelf};
+    console.log("Target:", target);
 
     updateBook(target, newShelf).then(setShelves);
   };

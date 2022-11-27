@@ -9,16 +9,16 @@ const MyBooks = ({ shelves, onShelfChange, myBooks }) => {
   //console.log("Values", Object.values(shelves));
   //console.log("Entries", Object.entries(shelves));
 
-  const bookshelves = Object.entries(shelves);
+  
 
   return (
     <>
-      {bookshelves.map((s) => (
+      {shelves.map((s) => (
         <BookCollection
-          key={s[0]}
-          name={_.startCase(s[0])}
-          bookList={myBooks.filter((b) => b.shelf === s[0])}
-          shelves={Object.keys(shelves)}
+          key={Object.keys(s)[0]}
+          name={_.startCase(Object.keys(s)[0])}
+          bookList={myBooks.filter((b) => b.shelf === Object.keys(s)[0])}
+          shelves={shelves}
           onShelfChange={onShelfChange}
         />
       ))}
@@ -27,7 +27,7 @@ const MyBooks = ({ shelves, onShelfChange, myBooks }) => {
 };
 
 MyBooks.propTypes = {
-  shelves: PropTypes.object.isRequired,
+  shelves: PropTypes.array.isRequired,
   myBooks: PropTypes.array.isRequired,
   onShelfChange: PropTypes.func.isRequired,
 };

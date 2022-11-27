@@ -1,14 +1,16 @@
 import React from "react";
 import DropUp from "./DropUp";
-import * as BooksAPI from "../utils/BooksAPI";
 
 const BookCollection = ({ name, bookList, shelves, onShelfChange }) => {
-  const getBookData = async (bookId) => {
+  console.log("Shelves from BC:", shelves);
+  console.log("Altered:", shelves);
+  /*const getBookData = async (bookId) => {
     const res = await BooksAPI.get();
     const book = res;
 
     return book.shelf;
-  };
+  };*/
+
   return (
     <div className="bookshelf">
       <div className="bookshelf-title">{name}</div>
